@@ -7,4 +7,5 @@ contextBridge.exposeInMainWorld("api", {
 	sendInput: (input) => ipcRenderer.send("terminal-input", input),
 	resizeTerminal: (cols, rows) =>
 		ipcRenderer.send("resize-terminal", cols, rows),
+	clipboardWrite: (text) => ipcRenderer.send("clipboard-write", text),
 });

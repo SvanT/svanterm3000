@@ -1,5 +1,5 @@
 import path from "path";
-import { BrowserWindow, app, ipcMain } from "electron";
+import { BrowserWindow, app, clipboard, ipcMain } from "electron";
 import started from "electron-squirrel-startup";
 
 const pty = require("node-pty");
@@ -76,5 +76,9 @@ ipcMain.on("start-terminal", (event) => {
 	// Resize terminal
 	ipcMain.on("resize-terminal", (event, cols, rows) => {
 		ptyProcess.resize(cols, rows);
+	});
+
+	ipcMain.on("clipboard-write", (event, text) => {
+		clipboard.writeText(text);
 	});
 });

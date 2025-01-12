@@ -1,6 +1,23 @@
+import {
+	Base64,
+	BrowserClipboardProvider,
+	ClipboardAddon,
+	type ClipboardSelectionType,
+	IClipboardProvider,
+} from "@xterm/addon-clipboard";
 import { FitAddon } from "@xterm/addon-fit";
 import { WebglAddon } from "@xterm/addon-webgl";
 import { Terminal } from "@xterm/xterm";
+
+class MyCustomClipboardProvider extends BrowserClipboardProvider {
+	public override writeText(
+		selection: ClipboardSelectionType,
+		data: string,
+	): Promise<void> {
+		window.api.clipboardWrite(data);
+		return Promise.resolve();
+	}
+}
 
 // Initialize xterm.js
 const terminal = new Terminal({
@@ -15,6 +32,12 @@ addon.onContextLoss((e) => {
 	addon.dispose();
 });
 terminal.loadAddon(addon);
+
+const clipboardAddon = new ClipboardAddon(
+	new Base64(),
+	new MyCustomClipboardProvider(),
+);
+terminal.loadAddon(clipboardAddon);
 
 const container = document.getElementById("xterm");
 terminal.open(container);

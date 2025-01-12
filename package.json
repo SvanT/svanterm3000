@@ -36,9 +36,10 @@
 	"license": "MIT",
 	"packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
 	"dependencies": {
+		"@xterm/addon-clipboard": "^0.2.0-beta.79",
 		"@xterm/addon-fit": "^0.10.0",
-		"@xterm/addon-webgl": "^0.18.0",
-		"@xterm/xterm": "^5.5.0",
+		"@xterm/addon-webgl": "^0.19.0-beta.96",
+		"@xterm/xterm": "^5.6.0-beta.96",
 		"electron-squirrel-startup": "^1.0.1",
 		"node-pty": "^1.1.0-beta22"
 	}

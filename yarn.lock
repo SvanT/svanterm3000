@@ -932,20 +932,27 @@
   resolved "https://registry.yarnpkg.com/@xmldom/xmldom/-/xmldom-0.8.10.tgz#a1337ca426aa61cef9fe15b5b28e340a72f6fa99"
   integrity sha512-2WALfTl4xo2SkGCYRt6rDTFfk9R1czmBvUQy12gK2KuRKIpWEhcbbzy8EZXtz/jkRqHX8bFEc6FC1HjX4TUWYw==
 
+"@xterm/addon-clipboard@^0.2.0-beta.79":
+  version "0.2.0-beta.79"
+  resolved "https://registry.yarnpkg.com/@xterm/addon-clipboard/-/addon-clipboard-0.2.0-beta.79.tgz#bda154fb6fa631529a232f2bfe05f961a8569ad3"
+  integrity sha512-zpwf43fzBG01fA8E75JQ/jsm/85bHCtFMOcURNAEbCoj0RSpZaq4rE5cPoy49IhYnctPZdYNxEU/+PzgtsSQ6Q==
+  dependencies:
+    js-base64 "^3.7.5"
+
 "@xterm/addon-fit@^0.10.0":
   version "0.10.0"
   resolved "https://registry.yarnpkg.com/@xterm/addon-fit/-/addon-fit-0.10.0.tgz#bebf87fadd74e3af30fdcdeef47030e2592c6f55"
   integrity sha512-UFYkDm4HUahf2lnEyHvio51TNGiLK66mqP2JoATy7hRZeXaGMRDr00JiSF7m63vR5WKATF605yEggJKsw0JpMQ==
 
-"@xterm/addon-webgl@^0.18.0":
-  version "0.18.0"
-  resolved "https://registry.yarnpkg.com/@xterm/addon-webgl/-/addon-webgl-0.18.0.tgz#9e927cee10af971595fb2a72fd4c3bc2819f0096"
-  integrity sha512-xCnfMBTI+/HKPdRnSOHaJDRqEpq2Ugy8LEj9GiY4J3zJObo3joylIFaMvzBwbYRg8zLtkO0KQaStCeSfoaI2/w==
+"@xterm/addon-webgl@^0.19.0-beta.96":
+  version "0.19.0-beta.96"
+  resolved "https://registry.yarnpkg.com/@xterm/addon-webgl/-/addon-webgl-0.19.0-beta.96.tgz#0a9552694c40cce91fa14dff9080463a2167d337"
+  integrity sha512-iAno2CMYRBHasr5aE3I7WN6DZ0mlHsEAIYAhvdhH+be1YxX4/DceBAtN0Ak7nFcQ70ZbtYzs1aNLTVKtli2TKA==
 
-"@xterm/xterm@^5.5.0":
-  version "5.5.0"
-  resolved "https://registry.yarnpkg.com/@xterm/xterm/-/xterm-5.5.0.tgz#275fb8f6e14afa6e8a0c05d4ebc94523ff775396"
-  integrity sha512-hqJHYaQb5OptNunnyAnkHyM8aCjZ1MEIDTQu1iIbbTD/xops91NB5yq1ZK/dC2JDbVWtF23zUtl9JE2NqwT87A==
+"@xterm/xterm@^5.6.0-beta.96":
+  version "5.6.0-beta.96"
+  resolved "https://registry.yarnpkg.com/@xterm/xterm/-/xterm-5.6.0-beta.96.tgz#3c862fde6088f2cdcb0967c43a90d7dd6dc94744"
+  integrity sha512-XdOZyAaqOW67J3kJGJDgVb5skTD2nDQLmBICyhQ0cEqThTKrX5CzB11RswG6rZE8dI+nDE+pc93NjAMXSrQgFg==
 
 abbrev@^1.0.0:
   version "1.1.1"
@@ -3036,6 +3043,11 @@ isexe@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/isexe/-/isexe-2.0.0.tgz#e8fbf374dc556ff8947a10dcb0572d633f2cfa10"
   integrity sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==
+
+js-base64@^3.7.5:
+  version "3.7.7"
+  resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-3.7.7.tgz#e51b84bf78fbf5702b9541e2cb7bfcb893b43e79"
+  integrity sha512-7rCnleh0z2CkXhH67J8K1Ytz0b2Y+yxTPL+/KOJoa20hfnVQ/3/T6W/KflYI4bRHRagNeXeU2bkNGI3v1oS/lw==
 
 js-yaml@^4.1.0:
   version "4.1.0"
