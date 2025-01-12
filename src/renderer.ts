@@ -9,6 +9,8 @@ import { FitAddon } from "@xterm/addon-fit";
 import { WebglAddon } from "@xterm/addon-webgl";
 import { Terminal } from "@xterm/xterm";
 
+let hasSentInitialSize = false;
+
 class MyCustomClipboardProvider extends BrowserClipboardProvider {
 	public override writeText(
 		selection: ClipboardSelectionType,
@@ -48,6 +50,11 @@ window.api.startTerminal();
 
 // Listen to terminal output
 window.api.onTerminalOutput((data) => {
+	if (!hasSentInitialSize) {
+		window.api.resizeTerminal(terminal.cols, terminal.rows);
+		hasSentInitialSize = true;
+	}
+
 	terminal.write(data);
 });
 
@@ -59,6 +66,5 @@ terminal.onData((input) => {
 // Resize terminal on window resize
 window.addEventListener("resize", () => {
 	fitAddon.fit();
-	const { cols, rows } = terminal;
-	window.api.resizeTerminal(cols, rows);
+	window.api.resizeTerminal(terminal.cols, terminal.rows);
 });
