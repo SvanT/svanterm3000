@@ -5,6 +5,7 @@ import { Terminal } from "@xterm/xterm";
 // Initialize xterm.js
 const terminal = new Terminal({
 	fontFamily: "Consolas Nerd Font Mono",
+	scrollback: 0,
 });
 const fitAddon = new FitAddon();
 terminal.loadAddon(fitAddon);
