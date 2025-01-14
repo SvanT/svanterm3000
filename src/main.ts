@@ -66,6 +66,10 @@ ipcMain.on("start-terminal", (event) => {
 		event.sender.send("terminal-output", data);
 	});
 
+	ptyProcess.onExit(() => {
+		app.quit();
+	});
+
 	// Listen to input from renderer
 	ipcMain.on("terminal-input", (event, input) => {
 		ptyProcess.write(input);
