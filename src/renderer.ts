@@ -26,6 +26,27 @@ const terminal = new Terminal({
 	fontFamily: "Consolas Nerd Font Mono",
 	scrollback: 0,
 });
+
+terminal.attachCustomKeyEventHandler((e) => {
+	if (e.ctrlKey && e.code === "KeyV" && e.type === "keydown") {
+		if (e.shiftKey) {
+			e.preventDefault();
+			window.api.sendInput("\x16");
+		} else {
+			return false;
+		}
+	} else if (e.ctrlKey && e.code === "KeyC" && e.type === "keydown") {
+		const selection = terminal.getSelection();
+		if (selection) {
+			navigator.clipboard.writeText(selection);
+			terminal.clearSelection();
+			return false;
+		}
+	}
+
+	return true;
+});
+
 const fitAddon = new FitAddon();
 terminal.loadAddon(fitAddon);
 
