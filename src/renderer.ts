@@ -65,6 +65,7 @@ terminal.loadAddon(clipboardAddon);
 const container = document.getElementById("xterm");
 terminal.open(container);
 fitAddon.fit();
+terminal.focus();
 
 // Start the terminal
 window.api.startTerminal();
