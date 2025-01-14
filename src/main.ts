@@ -1,6 +1,7 @@
 import path from "path";
 import { BrowserWindow, app, clipboard, ipcMain } from "electron";
 import started from "electron-squirrel-startup";
+import type { IPty } from "node-pty";
 
 const pty = require("node-pty");
 
@@ -58,10 +59,10 @@ app.on("activate", () => {
 ipcMain.on("start-terminal", (event) => {
 	// Spawn a shell
 	const shell = process.platform === "win32" ? "wsl.exe" : "bash";
-	const ptyProcess = pty.spawn(shell);
+	const ptyProcess: IPty = pty.spawn(shell);
 
 	// Listen to terminal output and send to renderer
-	ptyProcess.on("data", (data) => {
+	ptyProcess.onData((data) => {
 		event.sender.send("terminal-output", data);
 	});
 
