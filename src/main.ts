@@ -12,8 +12,6 @@ if (started) {
 const createWindow = () => {
 	// Create the browser window.
 	const mainWindow = new BrowserWindow({
-		width: 800,
-		height: 600,
 		webPreferences: { preload: path.join(__dirname, "preload.js") },
 	});
 
@@ -28,6 +26,8 @@ const createWindow = () => {
 			path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`),
 		);
 	}
+
+	//mainWindow.webContents.openDevTools();
 };
 
 // This method will be called when Electron has finished
@@ -54,14 +54,8 @@ app.on("activate", () => {
 
 ipcMain.on("start-terminal", (event) => {
 	// Spawn a shell
-	const shell = process.platform === "win32" ? "powershell.exe" : "bash";
-	const ptyProcess = pty.spawn(shell, [], {
-		name: "xterm-color",
-		cols: 80,
-		rows: 24,
-		cwd: process.env.HOME,
-		env: process.env,
-	});
+	const shell = process.platform === "win32" ? "wsl.exe" : "bash";
+	const ptyProcess = pty.spawn(shell);
 
 	// Listen to terminal output and send to renderer
 	ptyProcess.on("data", (data) => {
