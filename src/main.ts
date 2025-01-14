@@ -12,6 +12,7 @@ if (started) {
 const createWindow = () => {
 	// Create the browser window.
 	const mainWindow = new BrowserWindow({
+		show: false,
 		webPreferences: { preload: path.join(__dirname, "preload.js") },
 	});
 
@@ -26,6 +27,8 @@ const createWindow = () => {
 			path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`),
 		);
 	}
+
+	mainWindow.show();
 
 	//mainWindow.webContents.openDevTools();
 };
