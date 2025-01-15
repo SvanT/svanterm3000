@@ -30,8 +30,8 @@ const createWindow = () => {
 	}
 
 	mainWindow.show();
-
 	//mainWindow.webContents.openDevTools();
+	return mainWindow;
 };
 
 // This method will be called when Electron has finished
@@ -57,30 +57,59 @@ app.on("activate", () => {
 });
 
 ipcMain.on("start-terminal", (event) => {
+	const window = BrowserWindow.fromWebContents(event.sender);
+	if (!window) return;
+
 	// Spawn a shell
 	const shell = process.platform === "win32" ? "wsl.exe" : "bash";
 	const ptyProcess: IPty = pty.spawn(shell);
 
 	// Listen to terminal output and send to renderer
 	ptyProcess.onData((data) => {
-		event.sender.send("terminal-output", data);
+		if (!window.isDestroyed()) {
+			event.sender.send("terminal-output", data);
+		}
 	});
 
 	ptyProcess.onExit(() => {
-		app.quit();
+		if (!window.isDestroyed()) {
+			window.close();
+		}
 	});
 
 	// Listen to input from renderer
-	ipcMain.on("terminal-input", (event, input) => {
-		ptyProcess.write(input);
-	});
+	const inputHandler = (e: Electron.IpcMainEvent, input: string) => {
+		if (e.sender === event.sender) {
+			ptyProcess.write(input);
+		}
+	};
+	ipcMain.on("terminal-input", inputHandler);
 
 	// Resize terminal
-	ipcMain.on("resize-terminal", (event, cols, rows) => {
-		ptyProcess.resize(cols, rows);
-	});
+	const resizeHandler = (
+		e: Electron.IpcMainEvent,
+		cols: number,
+		rows: number,
+	) => {
+		if (e.sender === event.sender) {
+			ptyProcess.resize(cols, rows);
+		}
+	};
+	ipcMain.on("resize-terminal", resizeHandler);
 
-	ipcMain.on("clipboard-write", (event, text) => {
-		clipboard.writeText(text);
+	// Clean up handlers when window is closed
+	window.on("closed", () => {
+		ipcMain.removeListener("terminal-input", inputHandler);
+		ipcMain.removeListener("resize-terminal", resizeHandler);
+		ptyProcess.kill();
 	});
+});
+
+// Handle new window creation
+ipcMain.on("new-terminal", () => {
+	const window = createWindow();
+});
+
+ipcMain.on("clipboard-write", (event, text) => {
+	clipboard.writeText(text);
 });
