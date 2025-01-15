@@ -1,9 +1,8 @@
 import {
-	Base64,
-	BrowserClipboardProvider,
-	ClipboardAddon,
-	type ClipboardSelectionType,
-	IClipboardProvider,
+  Base64,
+  BrowserClipboardProvider,
+  ClipboardAddon,
+  type ClipboardSelectionType,
 } from "@xterm/addon-clipboard";
 import { FitAddon } from "@xterm/addon-fit";
 import { WebglAddon } from "@xterm/addon-webgl";
@@ -12,61 +11,61 @@ import { Terminal } from "@xterm/xterm";
 let hasSentInitialSize = false;
 
 class MyCustomClipboardProvider extends BrowserClipboardProvider {
-	public override writeText(
-		selection: ClipboardSelectionType,
-		data: string,
-	): Promise<void> {
-		window.api.clipboardWrite(data);
-		return Promise.resolve();
-	}
+  public override writeText(
+    _selection: ClipboardSelectionType,
+    data: string,
+  ): Promise<void> {
+    window.api.clipboardWrite(data);
+    return Promise.resolve();
+  }
 }
 
 // Initialize xterm.js
 const terminal = new Terminal({
-	fontFamily: "Consolas Nerd Font Mono",
-	scrollback: 0,
+  fontFamily: "Consolas Nerd Font Mono",
+  scrollback: 0,
 });
 
 terminal.attachCustomKeyEventHandler((e) => {
-	if (e.ctrlKey && e.code === "KeyV" && e.type === "keydown") {
-		if (e.shiftKey) {
-			e.preventDefault();
-			window.api.sendInput("\x16");
-		} else {
-			return false;
-		}
-	} else if (e.ctrlKey && e.code === "KeyC" && e.type === "keydown") {
-		const selection = terminal.getSelection();
-		if (selection) {
-			navigator.clipboard.writeText(selection);
-			terminal.clearSelection();
-			return false;
-		}
-	} else if (
-		e.ctrlKey &&
-		e.shiftKey &&
-		e.code === "KeyN" &&
-		e.type === "keydown"
-	) {
-		window.api.newTerminal();
-		return false;
-	}
+  if (e.ctrlKey && e.code === "KeyV" && e.type === "keydown") {
+    if (e.shiftKey) {
+      e.preventDefault();
+      window.api.sendInput("\x16");
+    } else {
+      return false;
+    }
+  } else if (e.ctrlKey && e.code === "KeyC" && e.type === "keydown") {
+    const selection = terminal.getSelection();
+    if (selection) {
+      navigator.clipboard.writeText(selection);
+      terminal.clearSelection();
+      return false;
+    }
+  } else if (
+    e.ctrlKey &&
+    e.shiftKey &&
+    e.code === "KeyN" &&
+    e.type === "keydown"
+  ) {
+    window.api.newTerminal();
+    return false;
+  }
 
-	return true;
+  return true;
 });
 
 const fitAddon = new FitAddon();
 terminal.loadAddon(fitAddon);
 
 const addon = new WebglAddon();
-addon.onContextLoss((e) => {
-	addon.dispose();
+addon.onContextLoss(() => {
+  addon.dispose();
 });
 terminal.loadAddon(addon);
 
 const clipboardAddon = new ClipboardAddon(
-	new Base64(),
-	new MyCustomClipboardProvider(),
+  new Base64(),
+  new MyCustomClipboardProvider(),
 );
 terminal.loadAddon(clipboardAddon);
 
@@ -80,21 +79,21 @@ window.api.startTerminal();
 
 // Listen to terminal output
 window.api.onTerminalOutput((data) => {
-	if (!hasSentInitialSize) {
-		window.api.resizeTerminal(terminal.cols, terminal.rows);
-		hasSentInitialSize = true;
-	}
+  if (!hasSentInitialSize) {
+    window.api.resizeTerminal(terminal.cols, terminal.rows);
+    hasSentInitialSize = true;
+  }
 
-	terminal.write(data);
+  terminal.write(data);
 });
 
 // Send terminal input to main process
 terminal.onData((input) => {
-	window.api.sendInput(input);
+  window.api.sendInput(input);
 });
 
 // Resize terminal on window resize
 window.addEventListener("resize", () => {
-	fitAddon.fit();
-	window.api.resizeTerminal(terminal.cols, terminal.rows);
+  fitAddon.fit();
+  window.api.resizeTerminal(terminal.cols, terminal.rows);
 });
