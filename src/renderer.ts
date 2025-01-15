@@ -42,7 +42,12 @@ terminal.attachCustomKeyEventHandler((e) => {
 			terminal.clearSelection();
 			return false;
 		}
-	} else if (e.ctrlKey && e.code === "KeyN" && e.type === "keydown") {
+	} else if (
+		e.ctrlKey &&
+		e.shiftKey &&
+		e.code === "KeyN" &&
+		e.type === "keydown"
+	) {
 		window.api.newTerminal();
 		return false;
 	}
