@@ -8,8 +8,6 @@ import { FitAddon } from "@xterm/addon-fit";
 import { WebglAddon } from "@xterm/addon-webgl";
 import { Terminal } from "@xterm/xterm";
 
-let hasSentInitialSize = false;
-
 class MyCustomClipboardProvider extends BrowserClipboardProvider {
   public override writeText(
     _selection: ClipboardSelectionType,
@@ -71,29 +69,23 @@ terminal.loadAddon(clipboardAddon);
 
 const container = document.getElementById("xterm");
 terminal.open(container);
-fitAddon.fit();
 terminal.focus();
+
+const resizeObserver = new ResizeObserver(() => {
+  fitAddon.fit();
+  window.api.resizeTerminal(terminal.cols, terminal.rows);
+});
+resizeObserver.observe(container);
 
 // Start the terminal
 window.api.startTerminal();
 
 // Listen to terminal output
 window.api.onTerminalOutput((data) => {
-  if (!hasSentInitialSize) {
-    window.api.resizeTerminal(terminal.cols, terminal.rows);
-    hasSentInitialSize = true;
-  }
-
   terminal.write(data);
 });
 
 // Send terminal input to main process
 terminal.onData((input) => {
   window.api.sendInput(input);
-});
-
-// Resize terminal on window resize
-window.addEventListener("resize", () => {
-  fitAddon.fit();
-  window.api.resizeTerminal(terminal.cols, terminal.rows);
 });
