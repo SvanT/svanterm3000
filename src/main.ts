@@ -40,7 +40,10 @@ const createWindow = (): BrowserWindow => {
 app.on("ready", createWindow);
 
 app.on("window-all-closed", () => {
-  app.quit();
+  // Quick and dirty fix to avoid some node-pty error when closing the last window without exiting the shell
+  setTimeout(() => {
+    app.quit();
+  }, 1000);
 });
 
 ipcMain.on("start-terminal", (event) => {
