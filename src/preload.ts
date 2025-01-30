@@ -11,4 +11,5 @@ contextBridge.exposeInMainWorld("api", {
   resizeTerminal: (cols, rows): void =>
     ipcRenderer.send("resize-terminal", cols, rows),
   clipboardWrite: (text): void => ipcRenderer.send("clipboard-write", text),
+  openLink: (uri): void => ipcRenderer.send("open-link", uri),
 });

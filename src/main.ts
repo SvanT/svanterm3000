@@ -2,6 +2,7 @@ import path from "node:path";
 import { BrowserWindow, app, clipboard, ipcMain } from "electron";
 import started from "electron-squirrel-startup";
 import type { IPty } from "node-pty";
+import open from "open";
 
 const pty = require("node-pty");
 
@@ -102,4 +103,8 @@ ipcMain.on("new-terminal", () => {
 
 ipcMain.on("clipboard-write", (_event, text) => {
   clipboard.writeText(text);
+});
+
+ipcMain.on("open-link", (_event, uri) => {
+  open(uri);
 });

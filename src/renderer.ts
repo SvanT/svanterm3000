@@ -68,7 +68,9 @@ const clipboardAddon = new ClipboardAddon(
 );
 terminal.loadAddon(clipboardAddon);
 
-const weblinksAddon = new WebLinksAddon();
+const weblinksAddon = new WebLinksAddon((event, uri) => {
+  window.api.openLink(uri);
+});
 terminal.loadAddon(weblinksAddon);
 
 const container = document.getElementById("xterm");
