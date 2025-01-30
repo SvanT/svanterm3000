@@ -5,6 +5,7 @@ import {
   type ClipboardSelectionType,
 } from "@xterm/addon-clipboard";
 import { FitAddon } from "@xterm/addon-fit";
+import { WebLinksAddon } from "@xterm/addon-web-links";
 import { WebglAddon } from "@xterm/addon-webgl";
 import { Terminal } from "@xterm/xterm";
 
@@ -66,6 +67,9 @@ const clipboardAddon = new ClipboardAddon(
   new MyCustomClipboardProvider(),
 );
 terminal.loadAddon(clipboardAddon);
+
+const weblinksAddon = new WebLinksAddon();
+terminal.loadAddon(weblinksAddon);
 
 const container = document.getElementById("xterm");
 terminal.open(container);
