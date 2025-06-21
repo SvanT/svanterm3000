@@ -1,3 +1,5 @@
+import { promises as fs } from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { BrowserWindow, app, clipboard, ipcMain } from "electron";
 import started from "electron-squirrel-startup";
@@ -108,3 +110,29 @@ ipcMain.on("clipboard-write", (_event, text) => {
 ipcMain.on("open-link", (_event, uri) => {
   open(uri);
 });
+
+// Handle file uploads
+ipcMain.handle(
+  "upload-file",
+  async (_event, fileName: string, fileData: ArrayBuffer) => {
+    try {
+      // Create a temporary directory if it doesn't exist
+      const tempDir = path.join(os.tmpdir(), "svanterm3000-uploads");
+      await fs.mkdir(tempDir, { recursive: true });
+
+      // Generate a unique filename to avoid collisions
+      const timestamp = Date.now();
+      const safeFileName = fileName.replace(/[^a-zA-Z0-9._-]/g, "_");
+      const tempFilePath = path.join(tempDir, `${timestamp}-${safeFileName}`);
+
+      // Write the file data
+      const buffer = Buffer.from(fileData);
+      await fs.writeFile(tempFilePath, buffer);
+
+      return tempFilePath;
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      throw error;
+    }
+  },
+);

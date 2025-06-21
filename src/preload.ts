@@ -12,4 +12,6 @@ contextBridge.exposeInMainWorld("api", {
     ipcRenderer.send("resize-terminal", cols, rows),
   clipboardWrite: (text): void => ipcRenderer.send("clipboard-write", text),
   openLink: (uri): void => ipcRenderer.send("open-link", uri),
+  uploadFile: (fileName: string, fileData: ArrayBuffer): Promise<string> =>
+    ipcRenderer.invoke("upload-file", fileName, fileData),
 });

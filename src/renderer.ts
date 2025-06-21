@@ -92,22 +92,31 @@ container.addEventListener("dragenter", (event) => {
   event.stopPropagation();
 });
 
-container.addEventListener("drop", (event) => {
+container.addEventListener("drop", async (event) => {
   event.preventDefault();
   event.stopPropagation();
 
+  // Since it seems like we cannot get the full paths directly (only file names)
+  // we handle it as an upload and paste the full path of the uploaded temporary files
   const files = Array.from(event.dataTransfer?.files || []);
   if (files.length > 0) {
-    const filePaths = files
-      .map((file) => {
-        const path = file.path;
+    try {
+      // Upload each file and collect the temporary paths
+      const uploadPromises = files.map(async (file) => {
+        const arrayBuffer = await file.arrayBuffer();
+        const tempPath = await window.api.uploadFile(file.name, arrayBuffer);
         // Quote the path if it contains spaces
-        return path.includes(" ") ? `"${path}"` : path;
-      })
-      .join(" ");
+        return tempPath.includes(" ") ? `"${tempPath}"` : tempPath;
+      });
 
-    // Insert the file paths at the current cursor position
-    window.api.sendInput(filePaths);
+      const filePaths = await Promise.all(uploadPromises);
+      const pathsString = filePaths.join(" ");
+
+      // Insert the file paths at the current cursor position
+      window.api.sendInput(pathsString);
+    } catch (error) {
+      console.error("Error handling dropped files:", error);
+    }
   }
 });
 
