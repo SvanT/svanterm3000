@@ -53,7 +53,7 @@ terminal.attachCustomKeyEventHandler((e) => {
     return false;
   } else if (e.code === "Enter" && e.type === "keydown" && e.ctrlKey) {
     e.preventDefault();
-    window.api.sendInput("\n");
+    window.api.sendInput(`${BRACKET_START}\n${BRACKET_END}`);
     return false;
   }
 
