@@ -16,7 +16,7 @@
     "@electron-forge/maker-squirrel": "^7.6.0",
     "@electron-forge/plugin-vite": "^7.6.0",
     "@types/electron-squirrel-startup": "^1.0.2",
-    "electron": "34.5.8",
+    "electron": "36.5.0",
     "ts-node": "^10.0.0",
     "typescript": "5.8.3",
     "vite": "^6.0.0"
