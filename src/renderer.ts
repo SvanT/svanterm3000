@@ -48,6 +48,10 @@ terminal.attachCustomKeyEventHandler((e) => {
   ) {
     window.api.newTerminal();
     return false;
+  } else if (e.code === "Enter" && e.type === "keydown" && e.ctrlKey) {
+    e.preventDefault();
+    window.api.sendInput("\n");
+    return false;
   }
 
   return true;
