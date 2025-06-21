@@ -124,6 +124,53 @@ container.addEventListener("drop", async (event) => {
   }
 });
 
+// Add paste support for images
+// Use document-level paste handler to intercept before terminal
+document.addEventListener(
+  "paste",
+  async (event) => {
+    // Only handle if terminal is focused
+    if (!document.activeElement?.closest("#xterm")) return;
+
+    const items = Array.from(event.clipboardData?.items || []);
+    const imageItems = items.filter((item) => item.type.startsWith("image/"));
+
+    if (imageItems.length > 0) {
+      // Prevent default paste behavior only for images
+      event.preventDefault();
+      event.stopPropagation();
+
+      try {
+        // Process each image item
+        const uploadPromises = imageItems.map(async (item, index) => {
+          const blob = item.getAsFile();
+          if (!blob) return null;
+
+          // Generate a filename based on the image type
+          const extension = blob.type.split("/")[1] || "png";
+          const fileName = `pasted-image-${Date.now()}-${index}.${extension}`;
+
+          const arrayBuffer = await blob.arrayBuffer();
+          const tempPath = await window.api.uploadFile(fileName, arrayBuffer);
+          // Quote the path if it contains spaces
+          return tempPath.includes(" ") ? `"${tempPath}"` : tempPath;
+        });
+
+        const filePaths = (await Promise.all(uploadPromises)).filter(Boolean);
+        if (filePaths.length > 0) {
+          window.api.sendInput(
+            `${BRACKET_START}${filePaths.join(" ")} ${BRACKET_END}`,
+          );
+        }
+      } catch (error) {
+        console.error("Error handling pasted images:", error);
+      }
+    }
+    // If no images, let the default paste behavior happen
+  },
+  true,
+); // Use capture phase to intercept before terminal
+
 const resizeObserver = new ResizeObserver(() => {
   fitAddon.fit();
   window.api.resizeTerminal(terminal.cols, terminal.rows);
