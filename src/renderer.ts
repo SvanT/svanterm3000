@@ -52,6 +52,8 @@ terminal.attachCustomKeyEventHandler((e) => {
     window.api.newTerminal();
     return false;
   } else if (e.code === "Enter" && e.type === "keydown" && e.ctrlKey) {
+    // Support using Ctrl-Enter to insert a newline in Claude Code instead of executing command,
+    // without bracketed paste it doesn't work in tmux
     e.preventDefault();
     window.api.sendInput(`${BRACKET_START}\n${BRACKET_END}`);
     return false;
