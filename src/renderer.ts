@@ -68,7 +68,7 @@ const clipboardAddon = new ClipboardAddon(
 );
 terminal.loadAddon(clipboardAddon);
 
-const weblinksAddon = new WebLinksAddon((event, uri) => {
+const weblinksAddon = new WebLinksAddon((_event, uri) => {
   window.api.openLink(uri);
 });
 terminal.loadAddon(weblinksAddon);
@@ -76,6 +76,36 @@ terminal.loadAddon(weblinksAddon);
 const container = document.getElementById("xterm");
 terminal.open(container);
 terminal.focus();
+
+// Add drag and drop support for file paths
+container.addEventListener("dragover", (event) => {
+  event.preventDefault();
+  event.stopPropagation();
+});
+
+container.addEventListener("dragenter", (event) => {
+  event.preventDefault();
+  event.stopPropagation();
+});
+
+container.addEventListener("drop", (event) => {
+  event.preventDefault();
+  event.stopPropagation();
+
+  const files = Array.from(event.dataTransfer?.files || []);
+  if (files.length > 0) {
+    const filePaths = files
+      .map((file) => {
+        const path = file.path;
+        // Quote the path if it contains spaces
+        return path.includes(" ") ? `"${path}"` : path;
+      })
+      .join(" ");
+
+    // Insert the file paths at the current cursor position
+    window.api.sendInput(filePaths);
+  }
+});
 
 const resizeObserver = new ResizeObserver(() => {
   fitAddon.fit();
