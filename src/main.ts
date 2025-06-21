@@ -129,6 +129,15 @@ ipcMain.handle(
       const buffer = Buffer.from(fileData);
       await fs.writeFile(tempFilePath, buffer);
 
+      // Convert Windows path to WSL path if on Windows
+      if (process.platform === "win32") {
+        // Convert C:\path\to\file to /mnt/c/path/to/file
+        const wslPath = tempFilePath
+          .replace(/^([A-Za-z]):/, (_, drive) => `/mnt/${drive.toLowerCase()}`)
+          .replace(/\\/g, "/");
+        return wslPath;
+      }
+
       return tempFilePath;
     } catch (error) {
       console.error("Error uploading file:", error);

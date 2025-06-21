@@ -9,6 +9,9 @@ import { WebLinksAddon } from "@xterm/addon-web-links";
 import { WebglAddon } from "@xterm/addon-webgl";
 import { Terminal } from "@xterm/xterm";
 
+const BRACKET_START = "\x1b[200~"; // ESC [ 200 ~
+const BRACKET_END = "\x1b[201~"; // ESC [ 201 ~
+
 class MyCustomClipboardProvider extends BrowserClipboardProvider {
   public override writeText(
     _selection: ClipboardSelectionType,
@@ -110,10 +113,9 @@ container.addEventListener("drop", async (event) => {
       });
 
       const filePaths = await Promise.all(uploadPromises);
-      const pathsString = filePaths.join(" ");
-
-      // Insert the file paths at the current cursor position
-      window.api.sendInput(pathsString);
+      window.api.sendInput(
+        `${BRACKET_START}${filePaths.join(" ")} ${BRACKET_END}`,
+      );
     } catch (error) {
       console.error("Error handling dropped files:", error);
     }
