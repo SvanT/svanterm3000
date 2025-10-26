@@ -1,11 +1,10 @@
+import path from "path";
 import { MakerSquirrel } from "@electron-forge/maker-squirrel";
 import { VitePlugin } from "@electron-forge/plugin-vite";
 import type { ForgeConfig } from "@electron-forge/shared-types";
-import path from "path";
 
 const config: ForgeConfig = {
   packagerConfig: {
-    asar: false,
     icon: path.join(__dirname, "assets", "icon.ico"),
     ignore: [
       // Ignore files/directories not needed
