@@ -2498,10 +2498,10 @@ node-fetch@^2.6.7:
   dependencies:
     whatwg-url "^5.0.0"
 
-node-pty@1.1.0-beta22:
-  version "1.1.0-beta22"
-  resolved "https://registry.yarnpkg.com/node-pty/-/node-pty-1.1.0-beta22.tgz#911997e416c8dcc0d908e65154238af8d8b5e01c"
-  integrity sha512-CpT334H2oAIULlENvd9U+VBW4ZL+G3clOnpXYzUIurlPCLnl/9xen/KDHBLRcwhZuWcHxIrsCxR1TDCdVDtr0w==
+node-pty@1.1.0-beta37:
+  version "1.1.0-beta37"
+  resolved "https://registry.yarnpkg.com/node-pty/-/node-pty-1.1.0-beta37.tgz#2c4b4079c51f80bbce8fefb0d8247ac0ac7d5f86"
+  integrity sha512-Ys8AW98Atyu9cLV5QLQshvSTF+YMDksVi2ULkYNPAKLGzaDQbXuOEjStg4ZZuL4c8saOTh1+2PNlCoyuagBr1Q==
   dependencies:
     node-addon-api "^7.1.0"
 

@@ -35,7 +35,7 @@
     "@xterm/addon-webgl": "0.19.0-beta.96",
     "@xterm/xterm": "5.6.0-beta.96",
     "electron-squirrel-startup": "1.0.1",
-    "node-pty": "1.1.0-beta22",
+    "node-pty": "1.1.0-beta37",
     "open": "10.1.0"
   }
 }
