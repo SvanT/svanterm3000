@@ -237,9 +237,10 @@
   optionalDependencies:
     global-agent "^3.0.0"
 
-"@electron/node-gyp@git+https://github.com/electron/node-gyp.git#06b29aafb7708acef8b3669835c8a7857ebc92d2":
+"@electron/node-gyp@https://github.com/electron/node-gyp#06b29aafb7708acef8b3669835c8a7857ebc92d2":
   version "10.2.0-electron.1"
-  resolved "git+https://github.com/electron/node-gyp.git#06b29aafb7708acef8b3669835c8a7857ebc92d2"
+  uid "06b29aafb7708acef8b3669835c8a7857ebc92d2"
+  resolved "https://github.com/electron/node-gyp#06b29aafb7708acef8b3669835c8a7857ebc92d2"
   dependencies:
     env-paths "^2.2.0"
     exponential-backoff "^3.1.1"
@@ -2752,10 +2753,10 @@ node-fetch@^2.6.7:
   dependencies:
     whatwg-url "^5.0.0"
 
-node-pty@1.1.0-beta37:
-  version "1.1.0-beta37"
-  resolved "https://registry.yarnpkg.com/node-pty/-/node-pty-1.1.0-beta37.tgz#2c4b4079c51f80bbce8fefb0d8247ac0ac7d5f86"
-  integrity sha512-Ys8AW98Atyu9cLV5QLQshvSTF+YMDksVi2ULkYNPAKLGzaDQbXuOEjStg4ZZuL4c8saOTh1+2PNlCoyuagBr1Q==
+node-pty@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/node-pty/-/node-pty-1.1.0.tgz#161936d45a47751c2e3b694c365e73017417a887"
+  integrity sha512-20JqtutY6JPXTUnL0ij1uad7Qe1baT46lyolh2sSENDd4sTzKZ4nmAFkeAARDKwmlLjPx6XKRlwRUxwjOy+lUg==
   dependencies:
     node-addon-api "^7.1.0"
 
