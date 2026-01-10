@@ -1,10 +1,18 @@
+import { exec } from "node:child_process";
 import { promises as fs } from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import { promisify } from "node:util";
 import { BrowserWindow, app, clipboard, ipcMain } from "electron";
 import started from "electron-squirrel-startup";
 import type { IPty } from "node-pty";
 import open from "open";
+
+const execAsync = promisify(exec);
+
+import { readFileSync } from "node:fs";
+const configPath = path.join(__dirname, "..", "..", "config.json");
+const config = JSON.parse(readFileSync(configPath, "utf-8"));
 
 const pty = require("node-pty");
 
@@ -54,9 +62,7 @@ ipcMain.on("start-terminal", (event) => {
   const window = BrowserWindow.fromWebContents(event.sender);
   if (!window) return;
 
-  // Spawn a shell
-  const shell = process.platform === "win32" ? "wsl.exe" : "bash";
-  const ptyProcess: IPty = pty.spawn(shell);
+  const ptyProcess: IPty = pty.spawn('ssh.exe', ['-L', '3000:127.0.0.1:3000', config.sshHost]);
 
   // Listen to terminal output and send to renderer
   ptyProcess.onData((data) => {
@@ -112,7 +118,7 @@ ipcMain.on("open-link", (_event, uri) => {
   open(uri);
 });
 
-// Handle file uploads
+// Handle file uploads - SCP to remote server and return remote path
 ipcMain.handle(
   "upload-file",
   async (_event, fileName: string, fileData: ArrayBuffer) => {
@@ -124,22 +130,19 @@ ipcMain.handle(
       // Generate a unique filename to avoid collisions
       const timestamp = Date.now();
       const safeFileName = fileName.replace(/[^a-zA-Z0-9._-]/g, "_");
-      const tempFilePath = path.join(tempDir, `${timestamp}-${safeFileName}`);
+      const tempFileName = `${timestamp}-${safeFileName}`;
+      const tempFilePath = path.join(tempDir, tempFileName);
 
-      // Write the file data
+      // Write the file data locally first
       const buffer = Buffer.from(fileData);
       await fs.writeFile(tempFilePath, buffer);
 
-      // Convert Windows path to WSL path if on Windows
-      if (process.platform === "win32") {
-        // Convert C:\path\to\file to /mnt/c/path/to/file
-        const wslPath = tempFilePath
-          .replace(/^([A-Za-z]):/, (_, drive) => `/mnt/${drive.toLowerCase()}`)
-          .replace(/\\/g, "/");
-        return wslPath;
-      }
+      // SCP the file to the remote server
+      const remotePath = `/tmp/${tempFileName}`;
+      await execAsync(`scp.exe "${tempFilePath}" ${config.sshHost}:${remotePath}`);
 
-      return tempFilePath;
+      // Return the remote path
+      return remotePath;
     } catch (error) {
       console.error("Error uploading file:", error);
       throw error;
