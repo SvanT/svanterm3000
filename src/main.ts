@@ -70,7 +70,14 @@ ipcMain.on("start-terminal", (event) => {
   const spawnSsh = (): void => {
     if (isWindowClosing || window.isDestroyed()) return;
 
-    ptyProcess = pty.spawn('ssh.exe', ['-L', '3000:127.0.0.1:3000', config.sshHost]);
+    ptyProcess = pty.spawn('ssh.exe', [
+      '-o', 'ConnectTimeout=2',
+      '-o', 'ServerAliveInterval=1',
+      '-o', 'ServerAliveCountMax=2',
+      '-o', 'TCPKeepAlive=no',
+      '-L', '3000:127.0.0.1:3000',
+      config.sshHost
+    ]);
     try {
       ptyProcess.resize(currentCols, currentRows);
     } catch {
