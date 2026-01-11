@@ -80,10 +80,9 @@ ipcMain.on("start-terminal", (event) => {
       }
     });
 
-    ptyProcess.onExit(() => {
+    ptyProcess.onExit(({ exitCode }) => {
       if (!isWindowClosing && !window.isDestroyed()) {
-        // Connection dropped, try to reconnect after 1 second
-        event.sender.send("terminal-output", "\r\n\x1b[33m[Connection lost. Reconnecting...]\x1b[0m\r\n");
+        event.sender.send("terminal-output", `\r\n\x1b[33m[ssh exited with code ${exitCode}, reconnecting in 1s...]\x1b[0m\r\n`);
         setTimeout(spawnSsh, 1000);
       }
     });
