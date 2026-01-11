@@ -62,24 +62,38 @@ ipcMain.on("start-terminal", (event) => {
   const window = BrowserWindow.fromWebContents(event.sender);
   if (!window) return;
 
-  const ptyProcess: IPty = pty.spawn('ssh.exe', ['-L', '3000:127.0.0.1:3000', config.sshHost]);
+  let ptyProcess: IPty | null = null;
+  let isWindowClosing = false;
+  let currentCols = 80;
+  let currentRows = 24;
 
-  // Listen to terminal output and send to renderer
-  ptyProcess.onData((data) => {
-    if (!window.isDestroyed()) {
-      event.sender.send("terminal-output", data);
-    }
-  });
+  const spawnSsh = (): void => {
+    if (isWindowClosing || window.isDestroyed()) return;
 
-  ptyProcess.onExit(() => {
-    if (!window.isDestroyed()) {
-      window.close();
-    }
-  });
+    ptyProcess = pty.spawn('ssh.exe', ['-L', '3000:127.0.0.1:3000', config.sshHost]);
+    ptyProcess.resize(currentCols, currentRows);
+
+    // Listen to terminal output and send to renderer
+    ptyProcess.onData((data: string) => {
+      if (!window.isDestroyed()) {
+        event.sender.send("terminal-output", data);
+      }
+    });
+
+    ptyProcess.onExit(() => {
+      if (!isWindowClosing && !window.isDestroyed()) {
+        // Connection dropped, try to reconnect after 1 second
+        event.sender.send("terminal-output", "\r\n\x1b[33m[Connection lost. Reconnecting...]\x1b[0m\r\n");
+        setTimeout(spawnSsh, 1000);
+      }
+    });
+  };
+
+  spawnSsh();
 
   // Listen to input from renderer
   const inputHandler = (e: Electron.IpcMainEvent, input: string): void => {
-    if (e.sender === event.sender) {
+    if (e.sender === event.sender && ptyProcess) {
       ptyProcess.write(input);
     }
   };
@@ -92,16 +106,23 @@ ipcMain.on("start-terminal", (event) => {
     rows: number,
   ): void => {
     if (e.sender === event.sender) {
-      ptyProcess.resize(cols, rows);
+      currentCols = cols;
+      currentRows = rows;
+      if (ptyProcess) {
+        ptyProcess.resize(cols, rows);
+      }
     }
   };
   ipcMain.on("resize-terminal", resizeHandler);
 
   // Clean up handlers when window is closed
   window.on("closed", () => {
+    isWindowClosing = true;
     ipcMain.removeListener("terminal-input", inputHandler);
     ipcMain.removeListener("resize-terminal", resizeHandler);
-    ptyProcess.kill();
+    if (ptyProcess) {
+      ptyProcess.kill();
+    }
   });
 });
 
