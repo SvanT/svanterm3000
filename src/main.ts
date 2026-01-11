@@ -71,7 +71,11 @@ ipcMain.on("start-terminal", (event) => {
     if (isWindowClosing || window.isDestroyed()) return;
 
     ptyProcess = pty.spawn('ssh.exe', ['-L', '3000:127.0.0.1:3000', config.sshHost]);
-    ptyProcess.resize(currentCols, currentRows);
+    try {
+      ptyProcess.resize(currentCols, currentRows);
+    } catch {
+      // pty may have already exited
+    }
 
     // Listen to terminal output and send to renderer
     ptyProcess.onData((data: string) => {
@@ -109,7 +113,11 @@ ipcMain.on("start-terminal", (event) => {
       currentCols = cols;
       currentRows = rows;
       if (ptyProcess) {
-        ptyProcess.resize(cols, rows);
+        try {
+          ptyProcess.resize(cols, rows);
+        } catch {
+          // pty may have already exited
+        }
       }
     }
   };
