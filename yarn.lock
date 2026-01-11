@@ -1111,10 +1111,10 @@
   resolved "https://registry.yarnpkg.com/@xterm/addon-webgl/-/addon-webgl-0.19.0.tgz#02533c3f7c0af3ac9a44bbb095cbd47d48e90c25"
   integrity sha512-b3fMOsyLVuCeNJWxolACEUED0vm7qC0cy4wRvf3oURSzDTYVQiGPhTnhWZwIHdvC48Y+oLhvYXnY4XDXPoJo6A==
 
-"@xterm/xterm@5.6.0-beta.143":
-  version "5.6.0-beta.143"
-  resolved "https://registry.yarnpkg.com/@xterm/xterm/-/xterm-5.6.0-beta.143.tgz#ce455d86ddb14b8cc995bb945c65b27774d71783"
-  integrity sha512-zOxRKnxlwTAAlprUv9j8MVly4UyKJYQm2QzkRvZGJd9hMnjS3bQS9mRLmt91jwLleSzHdtUMe2jKjtQnFmho3Q==
+"@xterm/xterm@6.0.0":
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/@xterm/xterm/-/xterm-6.0.0.tgz#93637b0f2ee3a70718b5746a27c9c506af16745b"
+  integrity sha512-TQwDdQGtwwDt+2cgKDLn0IRaSxYu1tSUjgKarSDkUM0ZNiSRXFpjxEsvc/Zgc5kq5omJ+V0a8/kIM2WD3sMOYg==
 
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"
