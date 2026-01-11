@@ -36,6 +36,6 @@
     "@xterm/xterm": "6.0.0",
     "electron-squirrel-startup": "1.0.1",
     "node-pty": "1.1.0",
-    "open": "10.2.0"
+    "open": "11.0.0"
   }
 }
