@@ -81,6 +81,7 @@ ipcMain.on("start-terminal", (event) => {
     });
 
     ptyProcess.onExit(({ exitCode }) => {
+      ptyProcess = null;
       if (!isWindowClosing && !window.isDestroyed()) {
         event.sender.send("terminal-output", `\r\n\x1b[33m[ssh exited with code ${exitCode}, reconnecting in 1s...]\x1b[0m\r\n`);
         setTimeout(spawnSsh, 1000);
