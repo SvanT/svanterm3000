@@ -75,6 +75,7 @@ ipcMain.on("start-terminal", (event) => {
       '-o', 'ServerAliveInterval=1',
       '-o', 'ServerAliveCountMax=2',
       '-o', 'TCPKeepAlive=no',
+      '-o', 'LogLevel=ERROR',
       '-L', '3000:127.0.0.1:3000',
       config.sshHost
     ]);
