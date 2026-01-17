@@ -1,3 +1,4 @@
+import { rm } from "fs/promises";
 import path from "path";
 import { MakerSquirrel } from "@electron-forge/maker-squirrel";
 import { VitePlugin } from "@electron-forge/plugin-vite";
@@ -18,6 +19,24 @@ const excludedPaths = [
   /^\/node_modules\/\.vite/, // Vite's dev dependency cache (3MB)
   /^\/node_modules\/node-pty\/prebuilds\/(?!win32-x64)/, // Other platform prebuilds (28MB)
   /^\/node_modules\/.*\.map$/, // Source maps from npm packages (5MB)
+];
+
+// Clean up build artifacts after native rebuild (these are created during packaging)
+const cleanupPaths = [
+  "node_modules/node-pty/build/deps", // Build intermediates (35MB)
+  "node_modules/node-pty/build/binding.sln",
+  "node_modules/node-pty/build/config.gypi",
+  "node_modules/node-pty/build/conpty.vcxproj",
+  "node_modules/node-pty/build/conpty.vcxproj.filters",
+  "node_modules/node-pty/build/conpty_console_list.vcxproj",
+  "node_modules/node-pty/build/conpty_console_list.vcxproj.filters",
+  "node_modules/node-pty/build/pty.vcxproj",
+  "node_modules/node-pty/build/pty.vcxproj.filters",
+  "node_modules/node-pty/deps", // Source deps (1.2MB)
+  "node_modules/node-pty/src", // Source files
+  "node_modules/node-pty/scripts", // Build scripts
+  "node_modules/node-pty/third_party", // Third party sources (2.5MB)
+  "node_modules/@xterm", // Bundled by Vite, not needed at runtime (3.2MB)
 ];
 
 const config: ForgeConfig = {
@@ -64,6 +83,15 @@ const config: ForgeConfig = {
       ],
     }),
   ],
+  hooks: {
+    postPackage: async (_config, options) => {
+      // Clean up build artifacts that were created during native rebuild
+      for (const p of cleanupPaths) {
+        const fullPath = path.join(options.outputPaths[0], "resources", "app", p);
+        await rm(fullPath, { recursive: true, force: true });
+      }
+    },
+  },
 };
 
 export default config;
