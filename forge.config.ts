@@ -1,4 +1,4 @@
-import { rm } from "fs/promises";
+import { readdir, rm } from "fs/promises";
 import path from "path";
 import { MakerSquirrel } from "@electron-forge/maker-squirrel";
 import { VitePlugin } from "@electron-forge/plugin-vite";
@@ -21,23 +21,29 @@ const excludedPaths = [
   /^\/node_modules\/.*\.map$/, // Source maps from npm packages (5MB)
 ];
 
-// Clean up build artifacts after native rebuild (these are created during packaging)
-const cleanupPaths = [
-  "node_modules/node-pty/build/deps", // Build intermediates (35MB)
-  "node_modules/node-pty/build/binding.sln",
-  "node_modules/node-pty/build/config.gypi",
-  "node_modules/node-pty/build/conpty.vcxproj",
-  "node_modules/node-pty/build/conpty.vcxproj.filters",
-  "node_modules/node-pty/build/conpty_console_list.vcxproj",
-  "node_modules/node-pty/build/conpty_console_list.vcxproj.filters",
-  "node_modules/node-pty/build/pty.vcxproj",
-  "node_modules/node-pty/build/pty.vcxproj.filters",
-  "node_modules/node-pty/deps", // Source deps (1.2MB)
-  "node_modules/node-pty/src", // Source files
-  "node_modules/node-pty/scripts", // Build scripts
-  "node_modules/node-pty/third_party", // Third party sources (2.5MB)
-  "node_modules/@xterm", // Bundled by Vite, not needed at runtime (3.2MB)
-];
+// Clean up build artifacts after native rebuild (created during packaging)
+async function cleanupBuildArtifacts(appPath: string) {
+  // Remove directories not needed at runtime
+  const dirsToRemove = [
+    "node_modules/node-pty/deps",
+    "node_modules/node-pty/src",
+    "node_modules/node-pty/scripts",
+    "node_modules/node-pty/third_party",
+    "node_modules/@xterm", // Bundled by Vite
+  ];
+  for (const dir of dirsToRemove) {
+    await rm(path.join(appPath, dir), { recursive: true, force: true });
+  }
+
+  // Clean node-pty/build - keep only Release/
+  const buildDir = path.join(appPath, "node_modules/node-pty/build");
+  const entries = await readdir(buildDir);
+  for (const entry of entries) {
+    if (entry !== "Release") {
+      await rm(path.join(buildDir, entry), { recursive: true, force: true });
+    }
+  }
+}
 
 const config: ForgeConfig = {
   packagerConfig: {
@@ -85,11 +91,8 @@ const config: ForgeConfig = {
   ],
   hooks: {
     postPackage: async (_config, options) => {
-      // Clean up build artifacts that were created during native rebuild
-      for (const p of cleanupPaths) {
-        const fullPath = path.join(options.outputPaths[0], "resources", "app", p);
-        await rm(fullPath, { recursive: true, force: true });
-      }
+      const appPath = path.join(options.outputPaths[0], "resources", "app");
+      await cleanupBuildArtifacts(appPath);
     },
   },
 };
