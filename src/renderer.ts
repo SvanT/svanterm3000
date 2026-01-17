@@ -25,7 +25,7 @@ class MyCustomClipboardProvider extends BrowserClipboardProvider {
 
 // Initialize xterm.js
 const terminal = new Terminal({
-  fontFamily: "Consolas Nerd Font Mono",
+  fontFamily: '"Consolas Nerd Font Mono", Consolas, "Courier New", monospace',
   scrollback: 0,
 });
 

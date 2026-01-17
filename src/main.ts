@@ -10,11 +10,10 @@ import open from "open";
 
 const execAsync = promisify(exec);
 
-import { readFileSync } from "node:fs";
 const configPath = path.join(__dirname, "..", "..", "config.json");
-const config = JSON.parse(readFileSync(configPath, "utf-8"));
-
-const pty = require("node-pty");
+// Start reading config immediately, in parallel with Electron init
+const configPromise = fs.readFile(configPath, "utf-8").then(JSON.parse);
+let config: { sshHost: string };
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -49,7 +48,10 @@ const createWindow = (): BrowserWindow => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on("ready", createWindow);
+app.on("ready", async () => {
+  config = await configPromise;
+  createWindow();
+});
 
 app.on("window-all-closed", () => {
   // Quick and dirty fix to avoid some node-pty error when closing the last window without exiting the shell
@@ -61,6 +63,9 @@ app.on("window-all-closed", () => {
 ipcMain.on("start-terminal", (event) => {
   const window = BrowserWindow.fromWebContents(event.sender);
   if (!window) return;
+
+  // Lazy load node-pty only when terminal is started
+  const pty = require("node-pty");
 
   let ptyProcess: IPty | null = null;
   let isWindowClosing = false;
