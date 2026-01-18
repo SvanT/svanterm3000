@@ -178,9 +178,12 @@ document.addEventListener(
 
 const resizeObserver = new ResizeObserver(() => {
   fitAddon.fit();
-  window.api.resizeTerminal(terminal.cols, terminal.rows);
 });
 resizeObserver.observe(container);
+
+terminal.onResize(({ cols, rows }) => {
+  window.api.resizeTerminal(cols, rows);
+});
 
 // Start the terminal
 window.api.startTerminal();
