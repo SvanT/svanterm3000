@@ -24,8 +24,12 @@ const createWindow = (): BrowserWindow => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     show: false,
+    backgroundColor: '#000000',
+    backgroundMaterial: 'none',
     icon: path.join(__dirname, "../assets/icon-256.png"),
-    webPreferences: { preload: path.join(__dirname, "preload.js") },
+    webPreferences: {
+      preload: path.join(__dirname, "preload.js"),
+    },
   });
 
   mainWindow.removeMenu();
