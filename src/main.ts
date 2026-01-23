@@ -10,6 +10,17 @@ import open from "open";
 
 const execAsync = promisify(exec);
 
+// Handle uncaught exceptions from node-pty resize race conditions
+process.on("uncaughtException", (error) => {
+  if (error.message?.includes("Cannot resize a pty that has already exited")) {
+    // Ignore this specific error - it's a race condition in node-pty
+    // that can occur when resize events arrive after the process exits
+    return;
+  }
+  // Re-throw other errors to maintain default behavior
+  throw error;
+});
+
 const configPath = path.join(__dirname, "..", "..", "config.json");
 // Start reading config immediately, in parallel with Electron init
 const configPromise = fs.readFile(configPath, "utf-8").then(JSON.parse);
