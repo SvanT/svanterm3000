@@ -6,9 +6,10 @@ import {
   type ClipboardSelectionType,
 } from "@xterm/addon-clipboard";
 import { FitAddon } from "@xterm/addon-fit";
+import { Terminal } from "@xterm/xterm";
+import { Unicode11Addon } from '@xterm/addon-unicode11';
 import { WebLinksAddon } from "@xterm/addon-web-links";
 import { WebglAddon } from "@xterm/addon-webgl";
-import { Terminal } from "@xterm/xterm";
 
 const BRACKET_START = "\x1b[200~"; // ESC [ 200 ~
 const BRACKET_END = "\x1b[201~"; // ESC [ 201 ~
@@ -25,6 +26,7 @@ class MyCustomClipboardProvider extends BrowserClipboardProvider {
 
 // Initialize xterm.js
 const terminal = new Terminal({
+  allowProposedApi: true,
   fontFamily: '"Consolas Nerd Font Mono", Consolas, "Courier New", monospace',
   scrollback: 0,
 });
@@ -72,11 +74,11 @@ terminal.attachCustomKeyEventHandler((e) => {
 const fitAddon = new FitAddon();
 terminal.loadAddon(fitAddon);
 
-const addon = new WebglAddon();
-addon.onContextLoss(() => {
-  addon.dispose();
+const webglAddon = new WebglAddon();
+webglAddon.onContextLoss(() => {
+  webglAddon.dispose();
 });
-terminal.loadAddon(addon);
+terminal.loadAddon(webglAddon);
 
 const clipboardAddon = new ClipboardAddon(
   new Base64(),
@@ -88,6 +90,10 @@ const weblinksAddon = new WebLinksAddon((_event, uri) => {
   window.api.openLink(uri);
 });
 terminal.loadAddon(weblinksAddon);
+
+const unicode11Addon = new Unicode11Addon();
+terminal.loadAddon(unicode11Addon);
+terminal.unicode.activeVersion = '11';
 
 const container = document.getElementById("xterm");
 terminal.open(container);
