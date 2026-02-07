@@ -19,7 +19,7 @@ class MyCustomClipboardProvider extends BrowserClipboardProvider {
     _selection: ClipboardSelectionType,
     data: string,
   ): Promise<void> {
-    window.api.clipboardWrite(data.trim());
+    window.api.clipboardWrite(data);
     return Promise.resolve();
   }
 }
@@ -34,17 +34,15 @@ const terminal = new Terminal({
 terminal.attachCustomKeyEventHandler((e) => {
   if (e.ctrlKey && e.code === "KeyV" && e.type === "keydown") {
     if (e.shiftKey) {
-      // Ctrl+Shift+V sends literal Ctrl-V character
       e.preventDefault();
       window.api.sendInput("\x16");
     } else {
-      // Let browser trigger paste event, handled by document paste handler
       return false;
     }
   } else if (e.ctrlKey && e.code === "KeyC" && e.type === "keydown") {
     const selection = terminal.getSelection();
     if (selection) {
-      navigator.clipboard.writeText(selection.trim());
+      navigator.clipboard.writeText(selection);
       terminal.clearSelection();
       return false;
     }
@@ -149,7 +147,7 @@ document.addEventListener(
     const imageItems = items.filter((item) => item.type.startsWith("image/"));
 
     if (imageItems.length > 0) {
-      // Prevent default paste behavior for images
+      // Prevent default paste behavior only for images
       event.preventDefault();
       event.stopPropagation();
 
@@ -178,18 +176,8 @@ document.addEventListener(
       } catch (error) {
         console.error("Error handling pasted images:", error);
       }
-    } else {
-      // Handle text paste with trimming
-      const text = event.clipboardData?.getData("text/plain");
-      if (text) {
-        event.preventDefault();
-        event.stopPropagation();
-        const trimmedText = text.trim();
-        if (trimmedText) {
-          terminal.paste(trimmedText);
-        }
-      }
     }
+    // If no images, let the default paste behavior happen
   },
   true,
 ); // Use capture phase to intercept before terminal
