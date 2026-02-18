@@ -24,7 +24,7 @@ process.on("uncaughtException", (error) => {
 const configPath = path.join(__dirname, "..", "..", "config.json");
 // Start reading config immediately, in parallel with Electron init
 const configPromise = fs.readFile(configPath, "utf-8").then(JSON.parse);
-let config: { sshHost: string };
+let config: { sshHost: string; forwardPorts?: number[]; reverseForwardPorts?: number[] };
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -96,7 +96,8 @@ ipcMain.on("start-terminal", (event) => {
       '-o', 'ServerAliveCountMax=2',
       '-o', 'TCPKeepAlive=no',
       '-o', 'LogLevel=ERROR',
-      '-L', '3000:127.0.0.1:3000',
+      ...(config.forwardPorts ?? []).flatMap(port => ['-L', `${port}:127.0.0.1:${port}`]),
+      ...(config.reverseForwardPorts ?? []).flatMap(port => ['-R', `${port}:127.0.0.1:${port}`]),
       config.sshHost
     ]);
     try {
