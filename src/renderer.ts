@@ -59,10 +59,12 @@ terminal.attachCustomKeyEventHandler((e) => {
     e.type === "keydown" &&
     (e.ctrlKey || e.shiftKey)
   ) {
-    // Support using Ctrl-Enter to insert a newline in Claude Code instead of executing command,
-    // without bracketed paste it doesn't work in tmux
+    // Send Ctrl-Enter/Shift-Enter as CSI u (kitty keyboard protocol)
+    // so they survive through SSH + tmux to the inner application.
+    // Requires tmux bindings: bind-key -n C-Enter/S-Enter send-keys -l
     e.preventDefault();
-    window.api.sendInput(`${BRACKET_START}\n${BRACKET_END}`);
+    const modifier = e.ctrlKey ? 5 : 2;
+    window.api.sendInput(`\x1b[13;${modifier}u`);
     return false;
   }
 
