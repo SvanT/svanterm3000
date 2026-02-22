@@ -99,7 +99,10 @@ ipcMain.on("start-terminal", (event) => {
       ...(config.forwardPorts ?? []).flatMap(port => ['-L', `${port}:127.0.0.1:${port}`]),
       ...(config.reverseForwardPorts ?? []).flatMap(port => ['-R', `${port}:127.0.0.1:${port}`]),
       config.sshHost
-    ]);
+    ], {
+      useConptyDll: true,
+      conptyPassthrough: true,
+    });
     try {
       ptyProcess.resize(currentCols, currentRows);
     } catch {
