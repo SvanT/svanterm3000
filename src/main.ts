@@ -101,7 +101,6 @@ ipcMain.on("start-terminal", (event) => {
       config.sshHost
     ], {
       useConptyDll: true,
-      conptyPassthrough: true,
     });
     try {
       ptyProcess.resize(currentCols, currentRows);
