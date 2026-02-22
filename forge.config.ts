@@ -1,4 +1,4 @@
-import { readdir, rm } from "fs/promises";
+import { copyFile, mkdir, readdir, rm } from "fs/promises";
 import path from "path";
 import { MakerSquirrel } from "@electron-forge/maker-squirrel";
 import { VitePlugin } from "@electron-forge/plugin-vite";
@@ -21,8 +21,24 @@ const excludedPaths = [
   /^\/node_modules\/.*\.map$/, // Source maps from npm packages (5MB)
 ];
 
+// Copy conpty.dll to build/Release/conpty/ so the native module can find it.
+// electron-rebuild wipes build/Release/ and doesn't run post-install.js,
+// so we must copy from third_party/ before cleaning it up.
+async function copyConptyDll(appPath: string) {
+  const thirdParty = path.join(appPath, "node_modules/node-pty/third_party/conpty");
+  const versions = await readdir(thirdParty);
+  const src = path.join(thirdParty, versions[0], "win10-x64");
+  const dest = path.join(appPath, "node_modules/node-pty/build/Release/conpty");
+  await mkdir(dest, { recursive: true });
+  for (const file of ["conpty.dll", "OpenConsole.exe"]) {
+    await copyFile(path.join(src, file), path.join(dest, file));
+  }
+}
+
 // Clean up build artifacts after native rebuild (created during packaging)
 async function cleanupBuildArtifacts(appPath: string) {
+  await copyConptyDll(appPath);
+
   // Remove directories not needed at runtime
   const dirsToRemove = [
     "node_modules/node-pty/deps",
