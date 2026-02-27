@@ -128,78 +128,61 @@ container.addEventListener("drop", async (event) => {
       });
 
       const filePaths = await Promise.all(uploadPromises);
-      window.api.sendInput(`${BRACKET_START}${filePaths.join(" ")} `);
-      await new Promise((r) => setTimeout(r, 5));
-      window.api.sendInput(BRACKET_END);
+      window.api.sendInput(
+        `${BRACKET_START}${filePaths.join(" ")} ${BRACKET_END}`,
+      );
     } catch (error) {
       console.error("Error handling dropped files:", error);
     }
   }
 });
 
-// Full paste handler: intercepts before xterm.js to ensure bracketed paste
-// end marker is never split across a ConPTY buffer boundary.
+// Add paste support for images
+// Use document-level paste handler to intercept before terminal
 document.addEventListener(
   "paste",
-  async (event: ClipboardEvent) => {
+  async (event) => {
+    // Only handle if terminal is focused
     if (!document.activeElement?.closest("#xterm")) return;
 
-    const clipboardData = event.clipboardData;
-    if (!clipboardData) return;
-
-    const items = Array.from(clipboardData.items || []);
+    const items = Array.from(event.clipboardData?.items || []);
     const imageItems = items.filter((item) => item.type.startsWith("image/"));
-    const text = clipboardData.getData("text/plain");
-
-    if (imageItems.length === 0 && !text) return;
-
-    event.preventDefault();
-    event.stopPropagation();
 
     if (imageItems.length > 0) {
+      // Prevent default paste behavior only for images
+      event.preventDefault();
+      event.stopPropagation();
+
       try {
+        // Process each image item
         const uploadPromises = imageItems.map(async (item, index) => {
           const blob = item.getAsFile();
           if (!blob) return null;
+
+          // Generate a filename based on the image type
           const extension = blob.type.split("/")[1] || "png";
           const fileName = `pasted-image-${Date.now()}-${index}.${extension}`;
+
           const arrayBuffer = await blob.arrayBuffer();
           const tempPath = await window.api.uploadFile(fileName, arrayBuffer);
+          // Quote the path if it contains spaces
           return tempPath.includes(" ") ? `"${tempPath}"` : tempPath;
         });
+
         const filePaths = (await Promise.all(uploadPromises)).filter(Boolean);
         if (filePaths.length > 0) {
-          window.api.sendInput(`${BRACKET_START}${filePaths.join(" ")} `);
-          await new Promise((r) => setTimeout(r, 5));
-          window.api.sendInput(BRACKET_END);
+          window.api.sendInput(
+            `${BRACKET_START}${filePaths.join(" ")} ${BRACKET_END}`,
+          );
         }
       } catch (error) {
         console.error("Error handling pasted images:", error);
       }
-      return;
     }
-
-    // Normalize line endings (same as xterm.js prepareTextForTerminal)
-    let processed = text.replace(/\r?\n/g, "\r");
-
-    if (terminal.modes.bracketedPasteMode) {
-      // Sanitize ESC chars to prevent bracket escape (same as xterm.js)
-      processed = processed.replace(/\x1b/g, "\u241b");
-      // Send start marker + text as one write, end marker as a separate write
-      // after a small delay. The delay ensures ConPTY has read and flushed the
-      // first write before the end marker arrives, preventing ConPTY's 96-byte
-      // output chunking from splitting the end marker across chunks. Without the
-      // delay, both writes land in the pipe buffer simultaneously and ConPTY
-      // re-chunks the combined data on its own boundary.
-      window.api.sendInput(`${BRACKET_START}${processed}`);
-      await new Promise((r) => setTimeout(r, 5));
-      window.api.sendInput(BRACKET_END);
-    } else {
-      window.api.sendInput(processed);
-    }
+    // If no images, let the default paste behavior happen
   },
   true,
-);
+); // Use capture phase to intercept before terminal
 
 const resizeObserver = new ResizeObserver(() => {
   fitAddon.fit();
