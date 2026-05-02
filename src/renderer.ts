@@ -148,22 +148,25 @@ document.addEventListener(
     if (!document.activeElement?.closest("#xterm")) return;
 
     const items = Array.from(event.clipboardData?.items || []);
-    const imageItems = items.filter((item) => item.type.startsWith("image/"));
+    const fileItems = items.filter((item) => item.kind === "file");
 
-    if (imageItems.length > 0) {
-      // Prevent default paste behavior only for images
+    if (fileItems.length > 0) {
+      // Prevent default paste behavior only when there are files
       event.preventDefault();
       event.stopPropagation();
 
       try {
-        // Process each image item
-        const uploadPromises = imageItems.map(async (item, index) => {
+        const uploadPromises = fileItems.map(async (item, index) => {
           const blob = item.getAsFile();
           if (!blob) return null;
 
-          // Generate a filename based on the image type
-          const extension = blob.type.split("/")[1] || "png";
-          const fileName = `pasted-image-${Date.now()}-${index}.${extension}`;
+          // Images from screenshots have no name; synthesize one.
+          // Real files (e.g. copied in Explorer) keep their original name.
+          let fileName = blob.name;
+          if (!fileName) {
+            const extension = blob.type.split("/")[1] || "bin";
+            fileName = `pasted-${Date.now()}-${index}.${extension}`;
+          }
 
           const arrayBuffer = await blob.arrayBuffer();
           const tempPath = await window.api.uploadFile(fileName, arrayBuffer);
@@ -178,10 +181,10 @@ document.addEventListener(
           );
         }
       } catch (error) {
-        console.error("Error handling pasted images:", error);
+        console.error("Error handling pasted files:", error);
       }
     }
-    // If no images, let the default paste behavior happen
+    // If no files, let the default paste behavior happen
   },
   true,
 ); // Use capture phase to intercept before terminal
