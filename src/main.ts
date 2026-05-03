@@ -183,26 +183,22 @@ ipcMain.handle(
   "upload-file",
   async (_event, fileName: string, fileData: ArrayBuffer) => {
     try {
-      // Create a temporary directory if it doesn't exist
-      const tempDir = path.join(os.tmpdir(), "svanterm3000-uploads");
-      await fs.mkdir(tempDir, { recursive: true });
+      const baseTempDir = path.join(os.tmpdir(), "svanterm3000-uploads");
+      await fs.mkdir(baseTempDir, { recursive: true });
 
-      // Generate a unique filename to avoid collisions
-      const timestamp = Date.now();
+      // Put the file in a unique folder so it keeps its original name
+      const uniqueDir = await fs.mkdtemp(path.join(baseTempDir, "upload-"));
       const safeFileName = fileName.replace(/[^a-zA-Z0-9._-]/g, "_");
-      const tempFileName = `${timestamp}-${safeFileName}`;
-      const tempFilePath = path.join(tempDir, tempFileName);
+      const localFilePath = path.join(uniqueDir, safeFileName);
 
-      // Write the file data locally first
       const buffer = Buffer.from(fileData);
-      await fs.writeFile(tempFilePath, buffer);
+      await fs.writeFile(localFilePath, buffer);
 
-      // SCP the file to the remote server
-      const remotePath = `/tmp/${tempFileName}`;
-      await execAsync(`scp.exe "${tempFilePath}" ${config.sshHost}:${remotePath}`);
+      // scp -r copies the folder, creating /tmp/<unique>/<filename> on the remote
+      const folderName = path.basename(uniqueDir);
+      await execAsync(`scp.exe -r "${uniqueDir}" ${config.sshHost}:/tmp/`);
 
-      // Return the remote path
-      return remotePath;
+      return `/tmp/${folderName}/${safeFileName}`;
     } catch (error) {
       console.error("Error uploading file:", error);
       throw error;
