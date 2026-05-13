@@ -2796,10 +2796,10 @@ node-fetch@^2.6.7:
   dependencies:
     whatwg-url "^5.0.0"
 
-node-pty@1.2.0-beta.11:
-  version "1.2.0-beta.11"
-  resolved "https://registry.yarnpkg.com/node-pty/-/node-pty-1.2.0-beta.11.tgz#b12338927cd5da9cfba82e39b5b36f74e52cbbe1"
-  integrity sha512-THcUyu1WwdgoIyUvgXOZ70EOMXzheGa0q3tbEb5kUIfKgcpBJ+AJ9Q1kq0bKtYmQzr77usXiTORZTLmAUQlnoQ==
+node-pty@1.2.0-beta.13:
+  version "1.2.0-beta.13"
+  resolved "https://registry.yarnpkg.com/node-pty/-/node-pty-1.2.0-beta.13.tgz#fe367d0f5afd7a004eabb6318f6d5907a9927533"
+  integrity sha512-ZbbJ7aJdmvRA53bw30D6YSJJKqo1IXTojD0kJeHZ/xZIxr7p1DCmvOmrOnjUo/rn1z4MDwKQGpx0C7K+cRKETw==
   dependencies:
     node-addon-api "^7.1.0"
 
