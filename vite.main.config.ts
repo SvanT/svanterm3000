@@ -25,4 +25,11 @@ function copyConptyDll(): import("vite").Plugin {
 // https://vitejs.dev/config
 export default defineConfig({
   plugins: [copyConptyDll()],
+  build: {
+    rollupOptions: {
+      // node-pty loads a .node binding via relative paths, so it must not be
+      // bundled — leave it as a runtime require of the installed package.
+      external: ["node-pty"],
+    },
+  },
 });
