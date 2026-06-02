@@ -31,6 +31,14 @@ const terminal = new Terminal({
   fontWeight: 400,
   fontWeightBold: 700,
   scrollback: 0,
+  // Route OSC 8 hyperlinks through the same default-browser path as the
+  // WebLinksAddon uses for auto-detected URLs (instead of xterm.js's built-in
+  // handler, which opens them in an Electron window).
+  linkHandler: {
+    activate(_event, uri) {
+      window.api.openLink(uri);
+    },
+  },
 });
 
 terminal.attachCustomKeyEventHandler((e) => {
