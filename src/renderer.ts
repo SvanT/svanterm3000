@@ -1,9 +1,9 @@
 import "@xterm/xterm/css/xterm.css";
 import {
-  Base64,
   BrowserClipboardProvider,
   ClipboardAddon,
   type ClipboardSelectionType,
+  type IBase64,
 } from "@xterm/addon-clipboard";
 import { FitAddon } from "@xterm/addon-fit";
 import { Terminal } from "@xterm/xterm";
@@ -13,6 +13,30 @@ import { WebglAddon } from "@xterm/addon-webgl";
 
 const BRACKET_START = "\x1b[200~"; // ESC [ 200 ~
 const BRACKET_END = "\x1b[201~"; // ESC [ 201 ~
+
+// The addon's bundled Base64 helper uses btoa/atob, which operate on Latin-1
+// "binary strings" — they do NOT round-trip UTF-8. So when an OSC 52 sequence
+// carries the base64 of a multi-byte glyph (e.g. Claude Code's "⏺"/"…"/box
+// chars), atob hands back each raw UTF-8 byte as its own char code, and that
+// mojibake (e.g. "…" -> "â\x80¦") is what lands on the OS clipboard. Decode the
+// base64 to bytes and run them through TextDecoder so the clipboard gets the
+// real characters; encode symmetrically for clipboard reads (OSC 52 "?").
+class Utf8Base64 implements IBase64 {
+  public encodeText(data: string): string {
+    const bytes = new TextEncoder().encode(data);
+    let binary = "";
+    for (const byte of bytes) {
+      binary += String.fromCharCode(byte);
+    }
+    return btoa(binary);
+  }
+
+  public decodeText(data: string): string {
+    const binary = atob(data);
+    const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+    return new TextDecoder("utf-8").decode(bytes);
+  }
+}
 
 class MyCustomClipboardProvider extends BrowserClipboardProvider {
   public override writeText(
@@ -91,7 +115,7 @@ webglAddon.onContextLoss(() => {
 terminal.loadAddon(webglAddon);
 
 const clipboardAddon = new ClipboardAddon(
-  new Base64(),
+  new Utf8Base64(),
   new MyCustomClipboardProvider(),
 );
 terminal.loadAddon(clipboardAddon);
