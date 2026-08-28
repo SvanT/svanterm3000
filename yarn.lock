@@ -2684,10 +2684,10 @@ nice-try@^1.0.4:
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
   integrity sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==
 
-node-abi@4.31.0, node-abi@^3.45.0:
-  version "4.31.0"
-  resolved "https://registry.yarnpkg.com/node-abi/-/node-abi-4.31.0.tgz#ac1e244d05d1b8c9e82d6fdcaa37b6407a47bf66"
-  integrity sha512-Erq5w/t3syw3s4sDsUaX4QttIdBPsGKTT1DTRsCkTonGggczhlDKm/wDX3o+HPJpQ41EjXCbcmXf0tgr5YZJXw==
+node-abi@4.35.0, node-abi@^3.45.0:
+  version "4.35.0"
+  resolved "https://registry.yarnpkg.com/node-abi/-/node-abi-4.35.0.tgz#2eb8e04075745e2dd6594769c499828c29113446"
+  integrity sha512-ymk4aIzxdPopw2giv8Fs1Ec6vybGkjmyxUwVqhkI4MCy2tVfXdkOGGWieWVjL0THgH+7a8lRdevyupoYj3Js/Q==
   dependencies:
     semver "^7.6.3"
 
