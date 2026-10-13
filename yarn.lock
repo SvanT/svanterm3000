@@ -979,35 +979,35 @@
   resolved "https://registry.yarnpkg.com/@xmldom/xmldom/-/xmldom-0.8.11.tgz#b79de2d67389734c57c52595f7a7305e30c2d608"
   integrity sha512-cQzWCtO6C8TQiYl1ruKNn2U6Ao4o4WBBcbL61yJl84x+j5sOWWFU9X7DpND8XZG3daDppSsigMdfAIl2upQBRw==
 
-"@xterm/addon-clipboard@0.3.0-beta.220":
-  version "0.3.0-beta.220"
-  resolved "https://registry.yarnpkg.com/@xterm/addon-clipboard/-/addon-clipboard-0.3.0-beta.220.tgz#91ae4736c7bea7c96d91b4095449380307ec2567"
-  integrity sha512-Wtg0kFTy46r5Xada/IWT/Ff8HFETNxyWuLXz6Dm5tEyfZgoNJS5as0dx5WQYRwJ65E+ZveOF2rmFhpDhqnSJ2Q==
+"@xterm/addon-clipboard@0.3.0-beta.313":
+  version "0.3.0-beta.313"
+  resolved "https://registry.yarnpkg.com/@xterm/addon-clipboard/-/addon-clipboard-0.3.0-beta.313.tgz#b593f900b44ed3a480aaee82e65d6f72e22fa307"
+  integrity sha512-Jvt9vzccZ1vQ0VHsQsvW0j9TGThsCeY9T3x2TP+pHhYB5NVgOIlKhNiRRGTdMxsJd8eW3fxEpTGVhf88aeb8Ug==
 
-"@xterm/addon-fit@0.12.0-beta.220":
-  version "0.12.0-beta.220"
-  resolved "https://registry.yarnpkg.com/@xterm/addon-fit/-/addon-fit-0.12.0-beta.220.tgz#49dfe16feaf08fc7176c5fa19c3841dee8ef8ad2"
-  integrity sha512-lTiEjsdJBYTvIdA8USs90j+pu7/9oCQEh8JYBDJoRxzzAcvk4V1GlEA++Ztspbfk4nSh2HVxwJvdeTD6ffAQlg==
+"@xterm/addon-fit@0.12.0-beta.311":
+  version "0.12.0-beta.311"
+  resolved "https://registry.yarnpkg.com/@xterm/addon-fit/-/addon-fit-0.12.0-beta.311.tgz#591819737486ef00568c62884a379a3a5710d6d5"
+  integrity sha512-M40mAWDoAVKz+0zs5ipmBJ+tNilw8CzUbbGIX05NANmTiw0MS47FYeJ4d2El4zdvFphDJjtVLrxTKXuz2wUM6Q==
 
-"@xterm/addon-unicode11@0.10.0-beta.220":
-  version "0.10.0-beta.220"
-  resolved "https://registry.yarnpkg.com/@xterm/addon-unicode11/-/addon-unicode11-0.10.0-beta.220.tgz#015df9c267f23f16e7789949cff4108c428d2e40"
-  integrity sha512-83VMUPOp7VKWsVlw+a6TrZP38VAQM7xigu0JcSj2gVO1xsYRyme9wlgKDX+lmgWrfJPSjgB0vfXpcxI4dt/Wvw==
+"@xterm/addon-unicode11@0.10.0-beta.310":
+  version "0.10.0-beta.310"
+  resolved "https://registry.yarnpkg.com/@xterm/addon-unicode11/-/addon-unicode11-0.10.0-beta.310.tgz#49e6c05480a80cbf1782424dd75f753e6fab1f7a"
+  integrity sha512-kQQIWMaQX7ViV1ofrYQnydR4/yNqCgOXYSYXG+x9pvNFU5/3KzZbqeQOXuM1y3cZYzR+Mw2cy3oRp/ssnK9cww==
 
-"@xterm/addon-web-links@0.13.0-beta.220":
-  version "0.13.0-beta.220"
-  resolved "https://registry.yarnpkg.com/@xterm/addon-web-links/-/addon-web-links-0.13.0-beta.220.tgz#330a852744a55bf01ff00ecaa03123e18dbc5991"
-  integrity sha512-XILFvFY0lOpTafIQxUOkS6x/MfZzarW3WbHZ40KEzAE8ImJqwOQiiqG17noLMUDD6rSOv7BRWNJACq4FflBNvg==
+"@xterm/addon-web-links@0.13.0-beta.310":
+  version "0.13.0-beta.310"
+  resolved "https://registry.yarnpkg.com/@xterm/addon-web-links/-/addon-web-links-0.13.0-beta.310.tgz#ebf91f9f99aa77974ecdc05a0f93e276249fe263"
+  integrity sha512-sxY3n5N3BCafchHLpqZSP44SncYhgt7rYSqk797naAeTJgymL3kG7fNIRob6SeV3nvf3MH0EIB6B3xxATtHYsQ==
 
-"@xterm/addon-webgl@0.20.0-beta.219":
-  version "0.20.0-beta.219"
-  resolved "https://registry.yarnpkg.com/@xterm/addon-webgl/-/addon-webgl-0.20.0-beta.219.tgz#cce59a30c28b99acdd03fd174039322a017f93d3"
-  integrity sha512-IaAcDDP0lhHIdYJuTFKZIMsRqlN8iR5U8lW9MiTK4mUAjettqZN2z/tkSsl4yV3GZ9/siOZofDl+GO1TK7y7ww==
+"@xterm/addon-webgl@0.20.0-beta.309":
+  version "0.20.0-beta.309"
+  resolved "https://registry.yarnpkg.com/@xterm/addon-webgl/-/addon-webgl-0.20.0-beta.309.tgz#786febd33cf3e8e204da3da99e7dec78d926ade0"
+  integrity sha512-xr69GVLQPmYHLrPzGOl+oapEIDhaYbLCZALL+0qcEI71UW/EmmawweI6RloQsVxIKbMrujH9Xb5KOAqP7BTFSQ==
 
-"@xterm/xterm@6.1.0-beta.220":
-  version "6.1.0-beta.220"
-  resolved "https://registry.yarnpkg.com/@xterm/xterm/-/xterm-6.1.0-beta.220.tgz#103e5d2ff9a436eb05f47a369b8b27efd49a7327"
-  integrity sha512-rwEKE75wfwfNWeGnjl0iQRA1W50HigKoGcGMeF3o5CqDSdI9IjmwzpV9xHXqLH6CYj6s9N1g6bbKFVDou9dJ/A==
+"@xterm/xterm@6.1.0-beta.315":
+  version "6.1.0-beta.315"
+  resolved "https://registry.yarnpkg.com/@xterm/xterm/-/xterm-6.1.0-beta.315.tgz#55708f827f0a41f9cdee4759c9115e182e8c4284"
+  integrity sha512-w7MeKxi6vbxE3IOFRiwgugkM6FZonE9gF9KyJ0OiE5HbYZOm38bz+CTGZg3+wqA6porJnHfjzX1KaihInP+iWg==
 
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"
